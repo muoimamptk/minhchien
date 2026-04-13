@@ -106,7 +106,7 @@
 
     <div class="card">
       <label for="codeInput">Nhập mã gạch</label>
-      <input id="codeInput" placeholder="Ví dụ: A12X" />
+      <input id="codeInput" placeholder="nhập mã trên viên gạch" />
       <button class="btn-primary" onclick="searchCode()">Tra giá</button>
       <div class="status" id="sheetStatus">Đang kết nối về kho Minh Chiến</div>
       <div class="result" id="result1"></div>
@@ -224,7 +224,7 @@
       if (sheetLoaded) return;
 
       const status = document.getElementById("sheetStatus");
-      status.textContent = "Đang kết nối Google Sheet...";
+      status.textContent = "Đang kết nối đến kho Minh Chiến...";
 
       try {
         const response = await fetch(SHEET_CSV_URL, { cache: "no-store" });
@@ -235,7 +235,7 @@
         sheetLoaded = true;
 
         if (Object.keys(productData).length > 0) {
-          status.textContent = "Đã tải dữ liệu từ Google Sheet.";
+          status.textContent = "Đã tải dữ liệu từ kho Minh Chiến";
         } else {
           status.textContent = "Không thấy dữ liệu hợp lệ trong Google Sheet.";
         }
