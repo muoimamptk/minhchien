@@ -130,6 +130,9 @@
       <label for="price2">Giá / m²</label>
       <input type="number" id="price2" placeholder="Tự động điền sau khi tra mã" />
 
+      <label for="boxQty">Số viên / 1 thùng</label>
+      <input type="number" id="boxQty" placeholder="Ví dụ: 4 (60x60), 6 hoặc 7 (30x30)" />
+
       <button class="btn-primary" onclick="calculate2()">Tính</button>
       <div class="result" id="result2"></div>
     </div>
@@ -183,6 +186,7 @@
       const priceIndex = headers.indexOf("price");
       const stockIndex = headers.indexOf("stock");
       const imageIndex = headers.indexOf("image");
+      const boxQtyIndex = headers.indexOf("boxqty");
 
       if (codeIndex === -1) return {};
 
@@ -199,7 +203,8 @@
           priceText: cols[priceIndex] || "Liên hệ",
           priceNumber: Number(String(cols[priceIndex] || "").replace(/[^0-9]/g, "")) || 0,
           stock: cols[stockIndex] || "Đang cập nhật",
-          image: cols[imageIndex] || ""
+          image: cols[imageIndex] || "",
+          boxQty: Number(String(cols[boxQtyIndex] || "").replace(/[^0-9]/g, "")) || 0
         };
       });
 
@@ -258,6 +263,7 @@
       }
 
       document.getElementById("price2").value = product.priceNumber || "";
+      document.getElementById("boxQty").value = product.boxQty || "";
 
       const size = extractSizeFromName(product.name);
       if (size) {
@@ -274,7 +280,8 @@
         '<br>Mã: ' + product.code +
         '<br>Tên: ' + product.name +
         '<br>Giá: ' + product.priceText +
-        '<br>Tồn kho: ' + product.stock;
+        '<br>Tồn kho: ' + product.stock +
+        (product.boxQty ? '<br>Số viên/thùng: ' + product.boxQty : '');
     }
 
     function calculate2() {
@@ -283,6 +290,7 @@
       const width = Number(document.getElementById("width2").value);
       const waste = Number(document.getElementById("waste2").value) || 0;
       const price = Number(document.getElementById("price2").value);
+      const boxQty = Number(document.getElementById("boxQty").value);
 
       if (!area || !length || !width || !price) {
         document.getElementById("result2").innerHTML = "Vui lòng nhập đủ diện tích, kích thước và giá.";
@@ -299,10 +307,17 @@
       const tilesNeeded = Math.ceil(totalArea / tileArea);
       const totalPrice = totalArea * price;
 
-      document.getElementById("result2").innerHTML =
+      let html =
         'Số viên: ' + tilesNeeded +
         '<br>Diện tích: ' + totalArea.toFixed(2) + ' m²' +
         '<br>Tiền: ' + totalPrice.toLocaleString("vi-VN") + ' VND';
+
+      if (boxQty && boxQty > 0) {
+        const boxes = Math.ceil(tilesNeeded / boxQty);
+        html += '<br>Số thùng: ' + boxes + ' thùng';
+      }
+
+      document.getElementById("result2").innerHTML = html;
     }
 
     document.getElementById("codeInput").addEventListener("input", function () {
