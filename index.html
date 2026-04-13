@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tổng-Kho-Gạch Minh Chiến</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(to bottom, #f8fafc, #e2e8f0);
+      color: #0f172a;
+    }
+    .wrap {
+      max-width: 460px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    .header {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #2563eb, #4338ca);
+      color: white;
+      font-weight: 700;
+      font-size: 22px;
+      box-shadow: 0 10px 20px rgba(37,99,235,0.25);
+    }
+    .title {
+      font-size: 30px;
+      font-weight: 700;
+      margin: 0;
+    }
+    .subtitle {
+      margin: 4px 0 0;
+      color: #475569;
+      font-size: 14px;
+    }
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 16px;
+      box-shadow: 0 12px 24px rgba(15,23,42,0.08);
+      border: 1px solid #e2e8f0;
+    }
+    .info {
+      background: #f8fafc;
+      border-radius: 18px;
+      padding: 14px;
+      font-size: 14px;
+      color: #475569;
+      margin-bottom: 14px;
+    }
+    .alert {
+      display: none;
+      border-radius: 18px;
+      padding: 12px 14px;
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+    .alert.loading {
+      background: #fffbeb;
+      color: #a16207;
+    }
+    .alert.error {
+      background: #fff1f2;
+      color: #be123c;
+    }
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #334155;
+    }
+    .search-row {
+      display: flex;
+      gap: 10px;
+    }
+    input {
+      flex: 1;
+      border: 1px solid #cbd5e1;
+      border-radius: 18px;
+      padding: 14px 16px;
+      font-size: 18px;
+      outline: none;
+    }
+    input:focus {
+      border-color: #64748b;
+    }
+    button {
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      border-radius: 18px;
+      padding: 0 20px;
+      font-weight: 700;
+      color: white;
+      background: linear-gradient(to right, #2563eb, #4338ca);
+      box-shadow: 0 8px 18px rgba(37,99,235,0.2);
+    }
+    .chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .chip {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 14px;
+      box-shadow: 0 2px 6px rgba(15,23,42,0.05);
+    }
+    .result {
+      margin-top: 18px;
+      overflow: hidden;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 12px 24px rgba(15,23,42,0.08);
+      border: 1px solid #e2e8f0;
+    }
+    .img-box {
+      width: 100%;
+      height: 260px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: white;
+    }
+    .result-body {
+      padding: 16px;
+    }
+    .top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .muted {
+      color: #64748b;
+      font-size: 14px;
+      margin: 0 0 4px;
+    }
+    .code {
+      font-size: 34px;
+      font-weight: 700;
+      margin: 0;
+    }
+    .stock {
+      background: #ecfdf5;
+      color: #047857;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .name {
+      font-size: 26px;
+      margin: 10px 0 0;
+    }
+    .price-box {
+      margin-top: 16px;
+      border-radius: 18px;
+      background: linear-gradient(to right, #2563eb, #4338ca);
+      padding: 16px;
+      color: white;
+      box-shadow: 0 10px 20px rgba(37,99,235,0.2);
+    }
+    .price-label {
+      font-size: 13px;
+      color: #dbeafe;
+      margin: 0 0 6px;
+    }
+    .price-value {
+      font-size: 34px;
+      font-weight: 700;
+      margin: 0;
+    }
+    .action-row {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .btn-secondary {
+      border-radius: 18px;
+      padding: 14px 16px;
+      font-size: 15px;
+      font-weight: 600;
+      border: 1px solid #cbd5e1;
+      background: white;
+      color: #334155;
+    }
+    .btn-light {
+      border-radius: 18px;
+      padding: 14px 16px;
+      font-size: 15px;
+      font-weight: 600;
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+    .empty {
+      padding: 32px 22px;
+      text-align: center;
+    }
+    .empty-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 999px;
+      background: #f1f5f9;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+    .empty h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .empty p {
+      margin: 8px 0 0;
+      color: #64748b;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .footer {
+      margin-top: 18px;
+      border: 1px dashed #cbd5e1;
+      border-radius: 24px;
+      padding: 14px;
+      text-align: center;
+      color: #64748b;
+      background: rgba(255,255,255,0.7);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div class="icon">MC</div>
+      <div>
+        <h1 class="title">Tổng Kho Gạch      -- Minh Chiến --</h1>
+        <p class="subtitle">Tra giá nhanh theo mã</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="info">♥ ♥ ♥ ♥ ♥</div>
+
+      <div id="loadingAlert" class="alert loading">Đang tải dữ liệu từ Google Sheets...</div>
+      <div id="errorAlert" class="alert error">Chưa đọc được Google Sheets nên app đang dùng dữ liệu mẫu.</div>
+
+      <label for="codeInput">Nhập mã gạch vào ô bên dưới</label>
+      <div class="search-row">
+        <input id="codeInput" value="" placeholder="" />
+        <button class="btn-primary" id="searchBtn">Tra giá</button>
+      </div>
+
+      <div class="chips" id="chips"></div>
+    </div>
+
+    <div class="result" id="resultBox"></div>
+
+    <div class="footer">♥♥♥♥</div>
+  </div>
+
+  <script>
+    const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1K17MCPHqVPgufMEUFHXPB9SZOFR5o6sdRWHsC9lraeU/gviz/tq?tqx=out:csv&gid=0";
+
+    const fallbackData = {
+      A12X: {
+        code: "A12X",
+        name: "Gạch mờ 60x60",
+        price: "135.000đ/m²",
+        stock: "Còn hàng",
+        image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80"
+      },
+      B45K: {
+        code: "B45K",
+        name: "Gạch bóng kính 80x80",
+        price: "185.000đ/m²",
+        stock: "Còn hàng",
+        image: "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80"
+      },
+      C99P: {
+        code: "C99P",
+        name: "Gạch xám xi măng 60x120",
+        price: "225.000đ/m²",
+        stock: "Mẫu mới",
+        image: "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80"
+      }
+    };
+
+    let productData = { ...fallbackData };
+    let currentResult = null;
+    let searched = false;
+
+    const codeInput = document.getElementById("codeInput");
+    const resultBox = document.getElementById("resultBox");
+    const chips = document.getElementById("chips");
+    const loadingAlert = document.getElementById("loadingAlert");
+    const errorAlert = document.getElementById("errorAlert");
+    const searchBtn = document.getElementById("searchBtn");
+
+    function showLoading(show) {
+      loadingAlert.style.display = show ? "block" : "none";
+    }
+
+    function showError(show) {
+      errorAlert.style.display = show ? "block" : "none";
+    }
+
+    function parseCsvLine(line) {
+      const result = [];
+      let current = "";
+      let inQuotes = false;
+
+      for (let i = 0; i < line.length; i += 1) {
+        const char = line[i];
+        const next = line[i + 1];
+
+        if (char === '"') {
+          if (inQuotes && next === '"') {
+            current += '"';
+            i += 1;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (char === "," && !inQuotes) {
+          result.push(current.trim());
+          current = "";
+        } else {
+          current += char;
+        }
+      }
+
+      result.push(current.trim());
+      return result;
+    }
+
+    function csvToData(text) {
+      const lines = text
+        .split(String.fromCharCode(10))
+        .map((line) => line.replaceAll(String.fromCharCode(13), "").trim())
+        .filter(Boolean);
+
+      if (lines.length < 2) return fallbackData;
+
+      const headers = parseCsvLine(lines[0]).map((item) => item.toLowerCase());
+      const codeIndex = headers.indexOf("code");
+      const nameIndex = headers.indexOf("name");
+      const priceIndex = headers.indexOf("price");
+      const stockIndex = headers.indexOf("stock");
+      const imageIndex = headers.indexOf("image");
+
+      if (codeIndex === -1) return fallbackData;
+
+      const mapped = {};
+
+      lines.slice(1).forEach((line) => {
+        const cols = parseCsvLine(line);
+        const code = (cols[codeIndex] || "").trim().toUpperCase();
+        if (!code) return;
+
+        mapped[code] = {
+          code: code,
+          name: cols[nameIndex] || "Chưa có tên sản phẩm",
+          price: cols[priceIndex] || "Liên hệ",
+          stock: cols[stockIndex] || "Đang cập nhật",
+          image: cols[imageIndex] || fallbackData.A12X.image
+        };
+      });
+
+      return Object.keys(mapped).length ? mapped : fallbackData;
+    }
+
+    function renderChips() {
+      chips.innerHTML = "";
+      Object.keys(productData).forEach((item) => {
+        const btn = document.createElement("button");
+        btn.className = "chip";
+        btn.textContent = item;
+        btn.onclick = () => {
+          codeInput.value = item;
+          searched = true;
+          currentResult = productData[item];
+          renderResult();
+        };
+        chips.appendChild(btn);
+      });
+    }
+
+    function renderResult() {
+      if (!currentResult) {
+        resultBox.innerHTML = `
+          <div class="empty">
+            <div class="empty-icon">🔎</div>
+            <h2>Không tìm thấy mã</h2>
+            <p>${searched ? "Anh/chị kiểm tra lại mã gạch hoặc liên hệ để được hỗ trợ nhanh." : "Nhập mã gạch để xem giá và hình ảnh."}</p>
+          </div>
+        `;
+        return;
+      }
+
+      resultBox.innerHTML = `
+        <div class="img-box">
+          <img id="productImg" src="${currentResult.image}" alt="${currentResult.name}">
+        </div>
+        <div class="result-body">
+          <div class="top-row">
+            <div>
+              <p class="muted">Mã sản phẩm</p>
+              <h2 class="code">${currentResult.code}</h2>
+            </div>
+            <span class="stock">${currentResult.stock}</span>
+          </div>
+
+          <p class="name">${currentResult.name}</p>
+
+          <div class="price-box">
+            <p class="price-label">Giá bán</p>
+            <p class="price-value">${currentResult.price}</p>
+          </div>
+
+          <div class="action-row">
+            <button class="btn-secondary">📞 0966400048</button>
+            <button class="btn-light" id="resetBtn">🔄 Gửi mã khác</button>
+          </div>
+        </div>
+      `;
+
+      const img = document.getElementById("productImg");
+      img.onerror = () => {
+        img.src = fallbackData.A12X.image;
+      };
+
+      document.getElementById("resetBtn").onclick = () => {
+        codeInput.value = "";
+        currentResult = null;
+        searched = false;
+        renderResult();
+      };
+    }
+
+    function handleSearch() {
+      const normalized = codeInput.value.trim().toUpperCase();
+      searched = true;
+      currentResult = productData[normalized] || null;
+      renderResult();
+    }
+
+    async function loadSheet() {
+      showLoading(true);
+      showError(false);
+
+      try {
+        const response = await fetch(SHEET_CSV_URL, { cache: "no-store" });
+        if (!response.ok) throw new Error("Load failed");
+
+        const text = await response.text();
+        const parsed = csvToData(text);
+        productData = parsed;
+        currentResult = null;
+        showError(false);
+      } catch (e) {
+        productData = { ...fallbackData };
+        currentResult = null;
+        showError(true);
+      } finally {
+        showLoading(false);
+        renderChips();
+        renderResult();
+      }
+    }
+
+    searchBtn.addEventListener("click", handleSearch);
+    codeInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") handleSearch();
+    });
+
+    renderChips();
+    renderResult();
+    loadSheet();
+  </script>
+</body>
+</html>
