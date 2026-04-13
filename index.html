@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tổng-Kho-Gạch Minh Chiến</title>
+  <title>Tổng Kho Gạch Minh Chiến</title>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -36,225 +36,61 @@
       font-size: 22px;
       box-shadow: 0 10px 20px rgba(37,99,235,0.25);
     }
-    .title {
-      font-size: 30px;
-      font-weight: 700;
-      margin: 0;
-    }
-    .subtitle {
-      margin: 4px 0 0;
-      color: #475569;
-      font-size: 14px;
-    }
+    .title { font-size: 28px; font-weight: 700; margin: 0; }
+    .subtitle { margin: 4px 0 0; color: #475569; font-size: 14px; }
     .card {
       background: white;
       border-radius: 24px;
       padding: 16px;
       box-shadow: 0 12px 24px rgba(15,23,42,0.08);
       border: 1px solid #e2e8f0;
-    }
-    .info {
-      background: #f8fafc;
-      border-radius: 18px;
-      padding: 14px;
-      font-size: 14px;
-      color: #475569;
-      margin-bottom: 14px;
-    }
-    .alert {
-      display: none;
-      border-radius: 18px;
-      padding: 12px 14px;
-      font-size: 14px;
-      margin-bottom: 14px;
-    }
-    .alert.loading {
-      background: #fffbeb;
-      color: #a16207;
-    }
-    .alert.error {
-      background: #fff1f2;
-      color: #be123c;
+      margin-bottom: 16px;
     }
     label {
       display: block;
-      margin-bottom: 10px;
-      font-size: 14px;
+      margin-bottom: 6px;
       font-weight: 600;
-      color: #334155;
-    }
-    .search-row {
-      display: flex;
-      gap: 10px;
     }
     input {
-      flex: 1;
+      width: 100%;
       border: 1px solid #cbd5e1;
       border-radius: 18px;
-      padding: 14px 16px;
-      font-size: 18px;
-      outline: none;
+      padding: 12px;
+      font-size: 16px;
+      margin-bottom: 12px;
     }
-    input:focus {
-      border-color: #64748b;
-    }
-    button {
-      cursor: pointer;
-      border: none;
-    }
+    .row { display: flex; gap: 10px; }
     .btn-primary {
+      margin-top: 6px;
+      width: 100%;
+      padding: 12px;
       border-radius: 18px;
-      padding: 0 20px;
       font-weight: 700;
       color: white;
       background: linear-gradient(to right, #2563eb, #4338ca);
-      box-shadow: 0 8px 18px rgba(37,99,235,0.2);
+      border: none;
+      cursor: pointer;
     }
-    .chips {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-    }
-    .chip {
-      background: white;
-      border: 1px solid #e2e8f0;
-      border-radius: 999px;
-      padding: 8px 14px;
-      font-size: 14px;
-      box-shadow: 0 2px 6px rgba(15,23,42,0.05);
-    }
+    .btn-primary:hover { opacity: 0.95; }
     .result {
-      margin-top: 18px;
-      overflow: hidden;
-      background: white;
-      border-radius: 24px;
-      box-shadow: 0 12px 24px rgba(15,23,42,0.08);
-      border: 1px solid #e2e8f0;
+      margin-top: 12px;
+      font-weight: 600;
+      line-height: 1.6;
     }
-    .img-box {
+    .product-image {
       width: 100%;
-      height: 260px;
-      background: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-bottom: 1px solid #e2e8f0;
-    }
-    .img-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      background: white;
-    }
-    .result-body {
-      padding: 16px;
-    }
-    .top-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
+      border-radius: 16px;
       margin-bottom: 10px;
-    }
-    .muted {
-      color: #64748b;
-      font-size: 14px;
-      margin: 0 0 4px;
-    }
-    .code {
-      font-size: 34px;
-      font-weight: 700;
-      margin: 0;
-    }
-    .stock {
-      background: #ecfdf5;
-      color: #047857;
-      border-radius: 999px;
-      padding: 8px 12px;
-      font-size: 14px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-    .name {
-      font-size: 26px;
-      margin: 10px 0 0;
-    }
-    .price-box {
-      margin-top: 16px;
-      border-radius: 18px;
-      background: linear-gradient(to right, #2563eb, #4338ca);
-      padding: 16px;
-      color: white;
-      box-shadow: 0 10px 20px rgba(37,99,235,0.2);
-    }
-    .price-label {
-      font-size: 13px;
-      color: #dbeafe;
-      margin: 0 0 6px;
-    }
-    .price-value {
-      font-size: 34px;
-      font-weight: 700;
-      margin: 0;
-    }
-    .action-row {
-      margin-top: 16px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .btn-secondary {
-      border-radius: 18px;
-      padding: 14px 16px;
-      font-size: 15px;
-      font-weight: 600;
-      border: 1px solid #cbd5e1;
+      object-fit: contain; /* sửa: không zoom nữa */
+      max-height: 220px;
       background: white;
-      color: #334155;
+      padding: 8px; /* thêm khoảng trống cho đẹp */
     }
-    .btn-light {
-      border-radius: 18px;
-      padding: 14px 16px;
-      font-size: 15px;
-      font-weight: 600;
-      background: #f1f5f9;
-      color: #0f172a;
-    }
-    .empty {
-      padding: 32px 22px;
-      text-align: center;
-    }
-    .empty-icon {
-      width: 64px;
-      height: 64px;
-      border-radius: 999px;
-      background: #f1f5f9;
-      margin: 0 auto 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-    }
-    .empty h2 {
-      margin: 0;
-      font-size: 24px;
-    }
-    .empty p {
-      margin: 8px 0 0;
+    .muted { color: #64748b; }
+    .status {
+      margin-top: 8px;
+      font-size: 13px;
       color: #64748b;
-      font-size: 15px;
-      line-height: 1.5;
-    }
-    .footer {
-      margin-top: 18px;
-      border: 1px dashed #cbd5e1;
-      border-radius: 24px;
-      padding: 14px;
-      text-align: center;
-      color: #64748b;
-      background: rgba(255,255,255,0.7);
-      font-size: 14px;
     }
   </style>
 </head>
@@ -263,76 +99,47 @@
     <div class="header">
       <div class="icon">MC</div>
       <div>
-        <h1 class="title">Tổng Kho Gạch      -- Minh Chiến --</h1>
-        <p class="subtitle">Tra giá nhanh theo mã</p>
+        <h1 class="title">Tổng Kho Gạch Minh Chiến</h1>
+        <p class="subtitle">Tra giá nhanh theo mã và tính số lượng</p>
       </div>
     </div>
 
     <div class="card">
-      <div class="info">♥ ♥ ♥ ♥ ♥</div>
-
-      <div id="loadingAlert" class="alert loading">Đang tải dữ liệu từ Google Sheets...</div>
-      <div id="errorAlert" class="alert error">Chưa đọc được Google Sheets nên app đang dùng dữ liệu mẫu.</div>
-
-      <label for="codeInput">Nhập mã gạch vào ô bên dưới</label>
-      <div class="search-row">
-        <input id="codeInput" value="" placeholder="" />
-        <button class="btn-primary" id="searchBtn">Tra giá</button>
-      </div>
-
-      <div class="chips" id="chips"></div>
+      <label for="codeInput">Nhập mã gạch</label>
+      <input id="codeInput" placeholder="Ví dụ: A12X" />
+      <button class="btn-primary" onclick="searchCode()">Tra giá</button>
+      <div class="status" id="sheetStatus">Đang kết nối Google Sheet...</div>
+      <div class="result" id="result1"></div>
     </div>
 
-    <div class="result" id="resultBox"></div>
+    <div class="card">
+      <h3 style="margin-top:0;">Tính nhanh số lượng</h3>
 
-    <div class="footer">♥♥♥♥</div>
+      <label for="area2">Diện tích (m²)</label>
+      <input type="number" id="area2" placeholder="Ví dụ: 32" />
+
+      <label>Kích thước gạch (cm)</label>
+      <div class="row">
+        <input type="number" id="length2" placeholder="Dài" />
+        <input type="number" id="width2" placeholder="Rộng" />
+      </div>
+
+      <label for="waste2">% trừ hao</label>
+      <input type="number" id="waste2" value="5" />
+
+      <label for="price2">Giá / m²</label>
+      <input type="number" id="price2" placeholder="Tự động điền sau khi tra mã" />
+
+      <button class="btn-primary" onclick="calculate2()">Tính</button>
+      <div class="result" id="result2"></div>
+    </div>
   </div>
 
   <script>
     const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1K17MCPHqVPgufMEUFHXPB9SZOFR5o6sdRWHsC9lraeU/gviz/tq?tqx=out:csv&gid=0";
 
-    const fallbackData = {
-      A12X: {
-        code: "A12X",
-        name: "Gạch mờ 60x60",
-        price: "135.000đ/m²",
-        stock: "Còn hàng",
-        image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80"
-      },
-      B45K: {
-        code: "B45K",
-        name: "Gạch bóng kính 80x80",
-        price: "185.000đ/m²",
-        stock: "Còn hàng",
-        image: "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80"
-      },
-      C99P: {
-        code: "C99P",
-        name: "Gạch xám xi măng 60x120",
-        price: "225.000đ/m²",
-        stock: "Mẫu mới",
-        image: "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80"
-      }
-    };
-
-    let productData = { ...fallbackData };
-    let currentResult = null;
-    let searched = false;
-
-    const codeInput = document.getElementById("codeInput");
-    const resultBox = document.getElementById("resultBox");
-    const chips = document.getElementById("chips");
-    const loadingAlert = document.getElementById("loadingAlert");
-    const errorAlert = document.getElementById("errorAlert");
-    const searchBtn = document.getElementById("searchBtn");
-
-    function showLoading(show) {
-      loadingAlert.style.display = show ? "block" : "none";
-    }
-
-    function showError(show) {
-      errorAlert.style.display = show ? "block" : "none";
-    }
+    let productData = {};
+    let sheetLoaded = false;
 
     function parseCsvLine(line) {
       const result = [];
@@ -350,7 +157,7 @@
           } else {
             inQuotes = !inQuotes;
           }
-        } else if (char === "," && !inQuotes) {
+        } else if (char === ',' && !inQuotes) {
           result.push(current.trim());
           current = "";
         } else {
@@ -364,11 +171,11 @@
 
     function csvToData(text) {
       const lines = text
-        .split(String.fromCharCode(10))
-        .map((line) => line.replaceAll(String.fromCharCode(13), "").trim())
+        .split(/\r?\n/)
+        .map((line) => line.trim())
         .filter(Boolean);
 
-      if (lines.length < 2) return fallbackData;
+      if (lines.length < 2) return {};
 
       const headers = parseCsvLine(lines[0]).map((item) => item.toLowerCase());
       const codeIndex = headers.indexOf("code");
@@ -377,7 +184,7 @@
       const stockIndex = headers.indexOf("stock");
       const imageIndex = headers.indexOf("image");
 
-      if (codeIndex === -1) return fallbackData;
+      if (codeIndex === -1) return {};
 
       const mapped = {};
 
@@ -389,121 +196,119 @@
         mapped[code] = {
           code: code,
           name: cols[nameIndex] || "Chưa có tên sản phẩm",
-          price: cols[priceIndex] || "Liên hệ",
+          priceText: cols[priceIndex] || "Liên hệ",
+          priceNumber: Number(String(cols[priceIndex] || "").replace(/[^0-9]/g, "")) || 0,
           stock: cols[stockIndex] || "Đang cập nhật",
-          image: cols[imageIndex] || fallbackData.A12X.image
+          image: cols[imageIndex] || ""
         };
       });
 
-      return Object.keys(mapped).length ? mapped : fallbackData;
+      return mapped;
     }
 
-    function renderChips() {
-      chips.innerHTML = "";
-      Object.keys(productData).forEach((item) => {
-        const btn = document.createElement("button");
-        btn.className = "chip";
-        btn.textContent = item;
-        btn.onclick = () => {
-          codeInput.value = item;
-          searched = true;
-          currentResult = productData[item];
-          renderResult();
-        };
-        chips.appendChild(btn);
-      });
-    }
-
-    function renderResult() {
-      if (!currentResult) {
-        resultBox.innerHTML = `
-          <div class="empty">
-            <div class="empty-icon">🔎</div>
-            <h2>Không tìm thấy mã</h2>
-            <p>${searched ? "Anh/chị kiểm tra lại mã gạch hoặc liên hệ để được hỗ trợ nhanh." : "Nhập mã gạch để xem giá và hình ảnh."}</p>
-          </div>
-        `;
-        return;
-      }
-
-      resultBox.innerHTML = `
-        <div class="img-box">
-          <img id="productImg" src="${currentResult.image}" alt="${currentResult.name}">
-        </div>
-        <div class="result-body">
-          <div class="top-row">
-            <div>
-              <p class="muted">Mã sản phẩm</p>
-              <h2 class="code">${currentResult.code}</h2>
-            </div>
-            <span class="stock">${currentResult.stock}</span>
-          </div>
-
-          <p class="name">${currentResult.name}</p>
-
-          <div class="price-box">
-            <p class="price-label">Giá bán</p>
-            <p class="price-value">${currentResult.price}</p>
-          </div>
-
-          <div class="action-row">
-            <button class="btn-secondary">📞 0966400048</button>
-            <button class="btn-light" id="resetBtn">🔄 Gửi mã khác</button>
-          </div>
-        </div>
-      `;
-
-      const img = document.getElementById("productImg");
-      img.onerror = () => {
-        img.src = fallbackData.A12X.image;
+    function extractSizeFromName(name) {
+      const match = String(name || "").match(/(\d{2,3})\s*[xX]\s*(\d{2,3})/);
+      if (!match) return null;
+      return {
+        length: Number(match[1]),
+        width: Number(match[2])
       };
-
-      document.getElementById("resetBtn").onclick = () => {
-        codeInput.value = "";
-        currentResult = null;
-        searched = false;
-        renderResult();
-      };
-    }
-
-    function handleSearch() {
-      const normalized = codeInput.value.trim().toUpperCase();
-      searched = true;
-      currentResult = productData[normalized] || null;
-      renderResult();
     }
 
     async function loadSheet() {
-      showLoading(true);
-      showError(false);
+      if (sheetLoaded) return;
+
+      const status = document.getElementById("sheetStatus");
+      status.textContent = "Đang kết nối Google Sheet...";
 
       try {
         const response = await fetch(SHEET_CSV_URL, { cache: "no-store" });
         if (!response.ok) throw new Error("Load failed");
 
         const text = await response.text();
-        const parsed = csvToData(text);
-        productData = parsed;
-        currentResult = null;
-        showError(false);
-      } catch (e) {
-        productData = { ...fallbackData };
-        currentResult = null;
-        showError(true);
-      } finally {
-        showLoading(false);
-        renderChips();
-        renderResult();
+        productData = csvToData(text);
+        sheetLoaded = true;
+
+        if (Object.keys(productData).length > 0) {
+          status.textContent = "Đã tải dữ liệu từ Google Sheet.";
+        } else {
+          status.textContent = "Không thấy dữ liệu hợp lệ trong Google Sheet.";
+        }
+      } catch (error) {
+        status.textContent = "Không tải được Google Sheet. Kiểm tra lại quyền chia sẻ sheet.";
       }
     }
 
-    searchBtn.addEventListener("click", handleSearch);
-    codeInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") handleSearch();
+    async function searchCode() {
+      await loadSheet();
+
+      const code = document.getElementById("codeInput").value.trim().toUpperCase();
+      const result = document.getElementById("result1");
+
+      if (!code) {
+        result.innerHTML = "";
+        return;
+      }
+
+      const product = productData[code];
+
+      if (!product) {
+        result.innerHTML = "Không tìm thấy mã";
+        return;
+      }
+
+      document.getElementById("price2").value = product.priceNumber || "";
+
+      const size = extractSizeFromName(product.name);
+      if (size) {
+        document.getElementById("length2").value = size.length;
+        document.getElementById("width2").value = size.width;
+      }
+
+      const imageHtml = product.image
+        ? '<img class="product-image" src="' + product.image + '" alt="' + product.name + '" onerror="this.style.display=\'none\'">'
+        : "";
+
+      result.innerHTML =
+        imageHtml +
+        '<br>Mã: ' + product.code +
+        '<br>Tên: ' + product.name +
+        '<br>Giá: ' + product.priceText +
+        '<br>Tồn kho: ' + product.stock;
+    }
+
+    function calculate2() {
+      const area = Number(document.getElementById("area2").value);
+      const length = Number(document.getElementById("length2").value);
+      const width = Number(document.getElementById("width2").value);
+      const waste = Number(document.getElementById("waste2").value) || 0;
+      const price = Number(document.getElementById("price2").value);
+
+      if (!area || !length || !width || !price) {
+        document.getElementById("result2").innerHTML = "Vui lòng nhập đủ diện tích, kích thước và giá.";
+        return;
+      }
+
+      const tileArea = (length / 100) * (width / 100);
+      if (!tileArea) {
+        document.getElementById("result2").innerHTML = "Kích thước gạch không hợp lệ.";
+        return;
+      }
+
+      const totalArea = area * (1 + waste / 100);
+      const tilesNeeded = Math.ceil(totalArea / tileArea);
+      const totalPrice = totalArea * price;
+
+      document.getElementById("result2").innerHTML =
+        'Số viên: ' + tilesNeeded +
+        '<br>Diện tích: ' + totalArea.toFixed(2) + ' m²' +
+        '<br>Tiền: ' + totalPrice.toLocaleString("vi-VN") + ' VND';
+    }
+
+    document.getElementById("codeInput").addEventListener("input", function () {
+      searchCode();
     });
 
-    renderChips();
-    renderResult();
     loadSheet();
   </script>
 </body>
