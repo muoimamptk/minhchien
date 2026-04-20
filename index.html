@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tổng Kho Gạch Minh Chiến</title>
+  <title>Báo Cáo Thị Trường</title>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -36,62 +36,376 @@
       font-size: 22px;
       box-shadow: 0 10px 20px rgba(37,99,235,0.25);
     }
-    .title { font-size: 28px; font-weight: 700; margin: 0; }
-    .subtitle { margin: 4px 0 0; color: #475569; font-size: 14px; }
+    .title {
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0;
+    }
+    .subtitle {
+      margin: 4px 0 0;
+      color: #475569;
+      font-size: 14px;
+    }
     .card {
       background: white;
       border-radius: 24px;
       padding: 16px;
       box-shadow: 0 12px 24px rgba(15,23,42,0.08);
       border: 1px solid #e2e8f0;
-      margin-bottom: 16px;
+    }
+    .alert {
+      display: none;
+      border-radius: 18px;
+      padding: 12px 14px;
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+    .alert.loading {
+      background: #fffbeb;
+      color: #a16207;
+    }
+    .alert.error {
+      background: #fff1f2;
+      color: #be123c;
     }
     label {
       display: block;
-      margin-bottom: 6px;
+      margin-bottom: 10px;
+      font-size: 14px;
       font-weight: 600;
+      color: #334155;
+    }
+    .search-row {
+      display: flex;
+      gap: 10px;
+    }
+    .input-wrap {
+      position: relative;
+      flex: 1;
+    }
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      font-size: 18px;
+      pointer-events: none;
     }
     input {
       width: 100%;
       border: 1px solid #cbd5e1;
       border-radius: 18px;
-      padding: 12px;
-      font-size: 16px;
-      margin-bottom: 12px;
+      padding: 14px 16px 14px 40px;
+      font-size: 18px;
+      outline: none;
     }
-    .row { display: flex; gap: 10px; }
+    input:focus {
+      border-color: #64748b;
+    }
+    button {
+      cursor: pointer;
+      border: none;
+    }
     .btn-primary {
-      margin-top: 6px;
-      width: 100%;
-      padding: 12px;
       border-radius: 18px;
+      padding: 0 20px;
       font-weight: 700;
       color: white;
       background: linear-gradient(to right, #2563eb, #4338ca);
+      box-shadow: 0 8px 18px rgba(37,99,235,0.2);
+      white-space: nowrap;
+    }
+    .chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .chip {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 14px;
+      box-shadow: 0 2px 6px rgba(15,23,42,0.05);
+    }
+    .result {
+      margin-top: 18px;
+      overflow: hidden;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 12px 24px rgba(15,23,42,0.08);
+      border: 1px solid #e2e8f0;
+    }
+    .img-box {
+      width: 100%;
+      height: 260px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: white;
+    }
+    .result-body {
+      padding: 16px;
+    }
+    .top-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .muted {
+      color: #64748b;
+      font-size: 14px;
+      margin: 0 0 4px;
+    }
+    .code {
+      font-size: 34px;
+      font-weight: 700;
+      margin: 0;
+    }
+    .stock {
+      background: #ecfdf5;
+      color: #047857;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .size-box {
+      margin-top: 10px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .info-box {
+      margin-top: 16px;
+      border-radius: 18px;
+      background: linear-gradient(to right, #2563eb, #4338ca);
+      padding: 16px;
+      color: white;
+      box-shadow: 0 10px 20px rgba(37,99,235,0.2);
+    }
+    .info-label {
+      font-size: 13px;
+      color: #dbeafe;
+      margin: 0 0 6px;
+    }
+    .info-value {
+      font-size: 30px;
+      font-weight: 700;
+      margin: 0;
+    }
+    .store-list {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .store-section {
+      margin-top: 14px;
+    }
+    .store-section-title {
+      margin: 0 0 8px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #334155;
+    }
+    .store-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: 15px;
+      font-weight: 600;
+      background: white;
+    }
+    .store-item-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .store-item-meta {
+      margin-top: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #475569;
+      line-height: 1.5;
+    }
+    .store-item-gallery {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .store-item-thumb {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+      background: white;
+    }
+    .store-item-thumb img {
+      width: 100%;
+      height: 74px;
+      object-fit: contain;
+      display: block;
+      background: white;
+    }
+    .store-item-thumb-code {
+      padding: 6px 6px 7px;
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+      color: #334155;
+      border-top: 1px solid #e2e8f0;
+    }
+    .size-button {
+      margin-top: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       border: none;
+      border-radius: 14px;
+      padding: 0;
+      font-size: 18px;
+      font-weight: 600;
+      background: transparent;
+      color: #0f172a;
       cursor: pointer;
     }
-    .btn-primary:hover { opacity: 0.95; }
-    .result {
-      margin-top: 12px;
-      font-weight: 600;
-      line-height: 1.6;
+    .size-button .hint {
+      font-size: 13px;
+      color: #64748b;
+      font-weight: 500;
     }
-    .product-image {
-      width: 100%;
+    .related-box {
+      margin-top: 16px;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 14px;
+    }
+    .related-title {
+      margin: 0 0 10px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .related-item {
+      border: 1px solid #e2e8f0;
       border-radius: 16px;
-      margin-bottom: 10px;
-      object-fit: contain; /* sửa: không zoom nữa */
-      max-height: 220px;
+      overflow: hidden;
       background: white;
-      padding: 8px; /* thêm khoảng trống cho đẹp */
+      cursor: pointer;
     }
-    .muted { color: #64748b; }
-    .status {
-      margin-top: 8px;
+    .related-item img {
+      width: 100%;
+      height: 120px;
+      object-fit: contain;
+      background: white;
+      display: block;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .related-item-body {
+      padding: 10px;
+    }
+    .related-code {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0;
+    }
+    .related-meta {
+      margin-top: 4px;
       font-size: 13px;
       color: #64748b;
     }
+    .empty {
+      padding: 32px 22px;
+      text-align: center;
+    }
+    .empty-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 999px;
+      background: #f1f5f9;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+    .empty h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .empty p {
+      margin: 8px 0 0;
+      color: #64748b;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .footer {
+      margin-top: 18px;
+      border: 1px dashed #cbd5e1;
+      border-radius: 24px;
+      padding: 14px;
+      text-align: center;
+      color: #64748b;
+      background: rgba(255,255,255,0.7);
+      font-size: 14px;
+    }
+    .date-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .date-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      overflow: hidden;
+      background: white;
+    }
+    .date-item img {
+      width: 100%;
+      height: 120px;
+      object-fit: contain;
+      background: white;
+      display: block;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .date-item-body {
+      padding: 10px;
+    }
+    .date-code {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0;
+    }
+    .date-meta {
+      margin-top: 4px;
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.4;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
   </style>
 </head>
 <body>
@@ -99,50 +413,94 @@
     <div class="header">
       <div class="icon">MC</div>
       <div>
-        <h1 class="title">Tra Giá Minh Chiến</h1>
-        <p class="subtitle">Tra giá nhanh theo mã và tính số lượng</p>
+        <h1 class="title">Báo Cáo Thị Trường</h1>
+        <p class="subtitle">Tra cứu nhanh theo mã</p>
       </div>
     </div>
 
     <div class="card">
-      <label for="codeInput">Nhập mã gạch</label>
-      <input id="codeInput" placeholder="nhập mã trên viên gạch" />
-      <button class="btn-primary" onclick="searchCode()">Tra giá</button>
-      <div class="status" id="sheetStatus">Đang kết nối về kho Minh Chiến</div>
-      <div class="result" id="result1"></div>
-    </div>
+      <div id="loadingAlert" class="alert loading">Đang tải dữ liệu từ Tiền Minh Chiến</div>
+      <div id="errorAlert" class="alert error">Không đọc được dữ liệu từ Tiền Minh Chiên</div>
 
-    <div class="card">
-      <h3 style="margin-top:0;">Tính nhanh số lượng</h3>
-
-      <label for="area2">Diện tích (m²)</label>
-      <input type="number" id="area2" placeholder="Ví dụ: 32" />
-
-      <label>Kích thước gạch (cm)</label>
-      <div class="row">
-        <input type="number" id="length2" placeholder="Dài" />
-        <input type="number" id="width2" placeholder="Rộng" />
+      <label for="codeInput">Nhập mã hoặc kích thướt</label>
+      <div class="search-row">
+        <div class="input-wrap">
+          <div class="search-icon">🔎</div>
+          <input id="codeInput" value="" placeholder="" />
+        </div>
+        <button class="btn-primary" id="searchBtn">Tra cứu</button>
       </div>
 
-      <label for="waste2">% trừ hao</label>
-      <input type="number" id="waste2" value="5" />
-
-      <label for="price2">Giá / m²</label>
-      <input type="number" id="price2" placeholder="Tự động điền sau khi tra mã" />
-
-      <label for="boxQty">Số viên / 1 thùng</label>
-      <input type="number" id="boxQty" placeholder="Tự động điền sau khi tra mã" />
-
-      <button class="btn-primary" onclick="calculate2()">Tính</button>
-      <div class="result" id="result2"></div>
+      
     </div>
+
+    <div class="result" id="resultBox"></div>
+
+    <div class="footer">Dữ liệu lấy từ Tiền Minh Chiến</div>
   </div>
 
   <script>
-    const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1K17MCPHqVPgufMEUFHXPB9SZOFR5o6sdRWHsC9lraeU/gviz/tq?tqx=out:csv&gid=0";
+    const GOOGLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/1s6r-yM4PcE3aczLZwk0r3SVaeJlWWyEsdjYvtup-hWw/edit?usp=sharing";
+    const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80";
 
-    let productData = {};
-    let sheetLoaded = false;
+    let tileData = [];
+    let rawRows = [];
+    let allStores = [];
+    let currentResult = null;
+    let searched = false;
+    let selectedSize = "";
+    let searchMode = "code";
+
+    const areaOrder = {
+      "đức hoà": 1,
+      "đức hòa": 1,
+      "đức huệ": 2,
+      "củ chi": 3,
+      "tây ninh": 4,
+    };
+
+    const codeInput = document.getElementById("codeInput");
+    const resultBox = document.getElementById("resultBox");
+    
+    const loadingAlert = document.getElementById("loadingAlert");
+    const errorAlert = document.getElementById("errorAlert");
+    const searchBtn = document.getElementById("searchBtn");
+    
+
+    function normalizeText(text) {
+      return String(text || "").trim().toLowerCase();
+    }
+
+    function toDisplayText(text) {
+      const value = String(text || "").trim().toLowerCase();
+      if (!value) return "";
+      return value
+        .split(" ")
+        .filter(Boolean)
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+    }
+
+    function getGoogleSheetCsvUrl(sheetUrl) {
+      if (!sheetUrl) return "";
+      const match = sheetUrl.match(/\/d\/([a-zA-Z0-9-_]+)/);
+      if (!match) return "";
+      const sheetId = match[1];
+      return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=0`;
+    }
+
+    function showLoading(show) {
+      loadingAlert.style.display = show ? "block" : "none";
+    }
+
+    function showError(message) {
+      if (!message) {
+        errorAlert.style.display = "none";
+        return;
+      }
+      errorAlert.textContent = message;
+      errorAlert.style.display = "block";
+    }
 
     function parseCsvLine(line) {
       const result = [];
@@ -160,7 +518,7 @@
           } else {
             inQuotes = !inQuotes;
           }
-        } else if (char === ',' && !inQuotes) {
+        } else if (char === "," && !inQuotes) {
           result.push(current.trim());
           current = "";
         } else {
@@ -172,158 +530,470 @@
       return result;
     }
 
-    function csvToData(text) {
-      const lines = text
-        .split(/\r?\n/)
-        .map((line) => line.trim())
+    function csvToRows(text) {
+      const lines = String(text || "")
+        .split(String.fromCharCode(10))
+        .map((line) => line.replaceAll(String.fromCharCode(13), "").trim())
         .filter(Boolean);
 
-      if (lines.length < 2) return {};
+      if (lines.length < 2) return [];
 
-      const headers = parseCsvLine(lines[0]).map((item) => item.toLowerCase());
-      const codeIndex = headers.indexOf("code");
-      const nameIndex = headers.indexOf("name");
-      const priceIndex = headers.indexOf("price");
-      const stockIndex = headers.indexOf("stock");
-      const imageIndex = headers.indexOf("image");
-      const boxQtyIndex = headers.indexOf("boxqty");
+      const headers = parseCsvLine(lines[0]).map((item) => normalizeText(item));
 
-      if (codeIndex === -1) return {};
-
-      const mapped = {};
-
-      lines.slice(1).forEach((line) => {
+      return lines.slice(1).map((line) => {
         const cols = parseCsvLine(line);
-        const code = (cols[codeIndex] || "").trim().toUpperCase();
-        if (!code) return;
-
-        mapped[code] = {
-          code: code,
-          name: cols[nameIndex] || "Chưa có tên sản phẩm",
-          priceText: cols[priceIndex] || "Liên hệ",
-          priceNumber: Number(String(cols[priceIndex] || "").replace(/[^0-9]/g, "")) || 0,
-          stock: cols[stockIndex] || "Đang cập nhật",
-          image: cols[imageIndex] || "",
-          boxQty: Number(String(cols[boxQtyIndex] || "").replace(/[^0-9]/g, "")) || 0
-        };
+        const row = {};
+        headers.forEach((header, index) => {
+          row[header] = cols[index] || "";
+        });
+        return row;
       });
-
-      return mapped;
     }
 
-    function extractSizeFromName(name) {
-      const match = String(name || "").match(/(\d{2,3})\s*[xX]\s*(\d{2,3})/);
-      if (!match) return null;
-      return {
-        length: Number(match[1]),
-        width: Number(match[2])
-      };
+    function parseDateValue(dateText) {
+      const text = String(dateText || "").trim();
+      if (!text) return 0;
+
+      const parts = text.split(/[\/\-.]/).map((item) => item.trim()).filter(Boolean);
+      if (parts.length !== 3) return 0;
+
+      let day = Number(parts[0]);
+      let month = Number(parts[1]);
+      let year = Number(parts[2]);
+
+      if (!day || !month || !year) return 0;
+      if (year < 100) year += 2000;
+
+      return year * 10000 + month * 100 + day;
+    }
+
+    function mapSheetRows(rows) {
+      return rows.map((row) => {
+        const dateText = row.date || row.data || row["ngày"] || row["ngay"] || row["ngày phát"] || row["ngay phat"] || "";
+
+        return {
+          code: row.code || row["mã"] || row["ma"] || row["mã số"] || row["ma so"] || "",
+          size: row.size || row["kích thước"] || row["kich thuoc"] || row["kt"] || "",
+          price: row.price || row["giá"] || row["gia"] || row["price"] || "",
+          quantity: Number(row.quantity || row["số lượng"] || row["so luong"] || 1) || 1,
+          image: row.image || row["hình ảnh"] || row["hinh anh"] || row["ảnh"] || row["anh"] || "",
+          store: row.store || row["cửa hàng"] || row["cua hang"] || row["tên cửa hàng"] || row["ten cua hang"] || "",
+          area: row.area || row["khu vực"] || row["khu vuc"] || row["địa điểm"] || row["dia diem"] || "",
+          date: dateText,
+          dateValue: parseDateValue(dateText),
+        };
+      });
+    }
+
+    function sortStoresList(list) {
+      return [...list].sort((a, b) => {
+        const areaA = normalizeText(a.area);
+        const areaB = normalizeText(b.area);
+        const orderA = areaOrder[areaA] ?? 999;
+        const orderB = areaOrder[areaB] ?? 999;
+        if (orderA !== orderB) return orderA - orderB;
+        return a.store.localeCompare(b.store, "vi");
+      });
+    }
+
+    function groupDateStores(rows) {
+      const grouped = new Map();
+
+      rows.forEach((entry) => {
+        const store = String(entry.store || "").trim();
+        const area = String(entry.area || "").trim();
+        if (!store) return;
+
+        const key = `${normalizeText(store)}|||${normalizeText(area)}`;
+        if (!grouped.has(key)) {
+          grouped.set(key, {
+            store: toDisplayText(store),
+            area: toDisplayText(area),
+            date: entry.date || "",
+            totalQuantity: 0,
+            totalCodes: 0,
+            sizes: new Map(),
+            codeMap: new Map(),
+          });
+        }
+
+        const item = grouped.get(key);
+        const qty = Math.max(1, Number(entry.quantity) || 1);
+        const size = String(entry.size || "").trim() || "Chưa có kích thước";
+        const code = String(entry.code || "").trim().toLowerCase();
+        const codeKey = String(entry.code || "").trim().toUpperCase();
+
+        item.totalQuantity += qty;
+        item.totalCodes += 1;
+
+        if (!item.sizes.has(size)) {
+          item.sizes.set(size, {
+            size,
+            quantity: 0,
+            codes: [],
+          });
+        }
+
+        const sizeItem = item.sizes.get(size);
+        sizeItem.quantity += qty;
+        if (code) sizeItem.codes.push(code);
+
+        if (codeKey && !item.codeMap.has(codeKey)) {
+          item.codeMap.set(codeKey, {
+            code: codeKey,
+            image: entry.image || "",
+          });
+        }
+      });
+
+      return Array.from(grouped.values())
+        .map((item) => ({
+          ...item,
+          sizes: Array.from(item.sizes.values()),
+          codes: Array.from(item.codeMap.values()),
+        }))
+        .sort((a, b) => {
+          if (b.totalCodes !== a.totalCodes) return b.totalCodes - a.totalCodes;
+          if (b.totalQuantity !== a.totalQuantity) return b.totalQuantity - a.totalQuantity;
+          const areaA = areaOrder[normalizeText(a.area)] ?? 999;
+          const areaB = areaOrder[normalizeText(b.area)] ?? 999;
+          if (areaA !== areaB) return areaA - areaB;
+          return a.store.localeCompare(b.store, "vi");
+        });
+    }
+
+    function buildDateStoreHtml(item) {
+      const lines = item.sizes.map((sizeItem) => {
+        const codesText = sizeItem.codes.join(", ");
+        return `${sizeItem.quantity} viên ${sizeItem.size}: ${codesText}`;
+      }).join("<br>");
+
+      const galleryHtml = item.codes.map((codeItem) => {
+        const image = codeItem.image || FALLBACK_IMAGE;
+        return `
+          <div class="store-item-thumb">
+            <img src="${image}" alt="${codeItem.code}">
+            <div class="store-item-thumb-code">${codeItem.code}</div>
+          </div>
+        `;
+      }).join("");
+
+      return `
+        <div class="store-item">
+          <div class="store-item-name">${item.store}${item.area ? ` - ${item.area}` : ""}</div>
+          <div class="store-item-meta">Đã phát<br>${lines}</div>
+          ${galleryHtml ? `<div class="store-item-gallery">${galleryHtml}</div>` : ""}
+        </div>
+      `;
+    }
+
+    function buildAllStores(rows) {
+      const map = new Map();
+
+      rows.forEach((row) => {
+        const store = String(row.store || "").trim();
+        const area = String(row.area || "").trim();
+        if (!store) return;
+
+        const key = `${normalizeText(store)}|||${normalizeText(area)}`;
+        if (!map.has(key)) {
+          map.set(key, { store: toDisplayText(store), area: toDisplayText(area) });
+        }
+      });
+
+      return sortStoresList(Array.from(map.values()));
+    }
+
+    function groupTiles(rows) {
+      const grouped = new Map();
+
+      rows.forEach((row) => {
+        const code = String(row.code || "").trim().toUpperCase();
+        if (!code) return;
+
+        if (!grouped.has(code)) {
+          grouped.set(code, {
+            code,
+            size: row.size || "Chưa có kích thước",
+            price: row.price || "",
+            priceDateValue: row.dateValue || 0,
+            image: row.image || "",
+            stores: [],
+          });
+        }
+
+        const item = grouped.get(code);
+
+        if ((!item.size || item.size === "Chưa có kích thước") && row.size) {
+          item.size = row.size;
+        }
+
+        if (!item.image && row.image) {
+          item.image = row.image;
+        }
+
+        if (row.price) {
+          if (!item.price || (row.dateValue || 0) >= (item.priceDateValue || 0)) {
+            item.price = row.price;
+            item.priceDateValue = row.dateValue || 0;
+          }
+        }
+
+        const store = String(row.store || "").trim();
+        const area = String(row.area || "").trim();
+        if (store) {
+          const normalizedStore = normalizeText(store);
+          const normalizedArea = normalizeText(area);
+          const exists = item.stores.some((entry) => normalizeText(entry.store) === normalizedStore && normalizeText(entry.area) === normalizedArea && entry.date === row.date);
+          if (!exists) {
+            item.stores.push({ store: toDisplayText(store), area: toDisplayText(area), date: row.date || "" });
+          }
+        }
+      });
+
+      return Array.from(grouped.values())
+        .map((item) => ({
+          ...item,
+          stores: sortStoresList(item.stores),
+        }))
+        .sort((a, b) => a.code.localeCompare(b.code));
+    }
+
+    
+
+    function renderResult() {
+      if (!currentResult && !selectedSize && searched) {
+        resultBox.innerHTML = `
+          <div class="empty">
+            <div class="empty-icon">🔎</div>
+            <h2>Không tìm thấy</h2>
+            <p>Anh/chị kiểm tra lại mã gạch hoặc kích thước trong Google Sheet.</p>
+          </div>
+        `;
+        return;
+      }
+
+      if (!currentResult && !selectedSize && !searched) {
+        resultBox.innerHTML = `
+          <div class="empty">
+            <div class="empty-icon">🔎</div>
+            <h2>Chưa tra cứu</h2>
+            <p>Nhập mã gạch hoặc kích thước để xem kết quả.</p>
+          </div>
+        `;
+        return;
+      }
+
+      if (!currentResult && selectedSize) {
+        // TRA THEO NGÀY
+        const dateItems = rawRows.filter((entry) => normalizeText(entry.date) === normalizeText(selectedSize));
+
+        if (dateItems.length > 0) {
+          const totalSamples = dateItems.reduce((sum, e) => sum + (e.quantity || 1), 0);
+          const dateStores = groupDateStores(dateItems);
+
+          const storeHtml = dateStores.map((item) => buildDateStoreHtml(item)).join("");
+
+          resultBox.innerHTML = `
+            <div class="result-body">
+              <div class="top-row">
+                <div>
+                  <p class="muted">Ngày phát</p>
+                  <h2 class="code" style="font-size:28px;">${selectedSize}</h2>
+                </div>
+                <span class="stock">${dateStores.length} cửa hàng</span>
+              </div>
+
+              
+
+              <div class="info-box" style="margin-top:12px;">
+                <p class="info-label">Tổng số cửa hàng</p>
+                <p class="info-value">${dateStores.length} cửa hàng</p>
+              </div>
+
+              <div class="store-section">
+                <h3 class="store-section-title">Cửa hàng đã phát</h3>
+                <div class="store-list">${storeHtml || '<div class="store-item">Chưa có dữ liệu</div>'}</div>
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        // TRA THEO KÍCH THƯỚC
+        // TRA THEO KÍCH THƯỚC
+        const sizeItems = tileData.filter((entry) => normalizeText(entry.size) === normalizeText(selectedSize));
+        resultBox.innerHTML = `
+          <div class="result-body">
+            <div class="top-row">
+              <div>
+                <p class="muted">Kích thước</p>
+                <h2 class="code" style="font-size:28px;">${selectedSize}</h2>
+              </div>
+              <span class="stock">${sizeItems.length} mẫu</span>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      const issuedStores = currentResult.stores || [];
+      const issuedKeys = new Set(issuedStores.map((entry) => `${normalizeText(entry.store)}|||${normalizeText(entry.area)}`));
+      const unissuedStores = allStores.filter((entry) => !issuedKeys.has(`${normalizeText(entry.store)}|||${normalizeText(entry.area)}`));
+
+      const issuedHtml = issuedStores.map((entry) => {
+        return `<div class="store-item">${entry.store}${entry.area ? " - " + entry.area : ""}${entry.date ? " - " + entry.date : ""}</div>`;
+      }).join("");
+
+      const unissuedHtml = unissuedStores.map((entry) => {
+        return `<div class="store-item">${entry.store}${entry.area ? " - " + entry.area : ""}</div>`;
+      }).join("");
+
+      const sizeLabel = (currentResult.size || "Chưa có kích thước") + (currentResult.price ? " - " + currentResult.price : "");
+      const imageHtml = currentResult.image
+        ? `<div class="img-box"><img id="productImg" src="${currentResult.image}" alt="${currentResult.code}"></div>`
+        : "";
+
+      resultBox.innerHTML = `
+        ${imageHtml}
+        <div class="result-body">
+          <div class="top-row">
+            <div>
+              <p class="muted">Mã gạch</p>
+              <h2 class="code">${currentResult.code}</h2>
+            </div>
+            <span class="stock">${issuedStores.length} cửa hàng</span>
+          </div>
+
+          <button type="button" class="size-button" id="sizeButton">
+            <span>${sizeLabel}</span>
+            <span class="hint">Xem cùng kích thước</span>
+          </button>
+
+          <div class="info-box">
+            <p class="info-label">Thông tin phát mẫu</p>
+            <p class="info-value">${issuedStores.length} nơi đã phát</p>
+          </div>
+
+          <div class="store-section">
+            <h3 class="store-section-title">Cửa hàng đã phát</h3>
+            <div class="store-list">${issuedHtml || '<div class="store-item">Chưa có dữ liệu</div>'}</div>
+          </div>
+
+          <div class="info-box" style="margin-top:12px;">
+            <p class="info-label">Cửa hàng chưa phát</p>
+            <p class="info-value">${unissuedStores.length} nơi chưa phát</p>
+          </div>
+
+          <div class="store-section">
+            <h3 class="store-section-title">Cửa hàng chưa phát</h3>
+            <div class="store-list">${unissuedHtml || '<div class="store-item">Không còn cửa hàng nào</div>'}</div>
+          </div>
+        </div>
+      `;
+
+      const img = document.getElementById("productImg");
+      if (img) {
+        img.onerror = () => {
+          img.src = FALLBACK_IMAGE;
+        };
+      }
+
+      const sizeButton = document.getElementById("sizeButton");
+      if (sizeButton) {
+        sizeButton.onclick = () => {
+          const clickedSize = currentResult ? currentResult.size : "";
+          currentResult = null;
+          selectedSize = clickedSize;
+          searchMode = "size";
+          renderResult();
+        };
+      }
+    }
+
+    function handleSearch() {
+      const normalized = codeInput.value.trim().toUpperCase();
+      searched = true;
+
+      const byCode = tileData.find((item) => item.code === normalized) || null;
+      if (byCode) {
+        currentResult = byCode;
+        selectedSize = byCode.size || "";
+        searchMode = "code";
+        renderResult();
+        return;
+      }
+
+      const byDate = rawRows.filter((item) => normalizeText(item.date) === normalizeText(normalized));
+      if (byDate.length > 0) {
+        currentResult = null;
+        selectedSize = byDate[0].date || normalized;
+        searchMode = "date";
+        renderResult();
+        return;
+      }
+
+      const bySize = tileData.filter((item) => normalizeText(item.size) === normalizeText(normalized));
+      if (bySize.length > 0) {
+        currentResult = null;
+        selectedSize = bySize[0].size || normalized;
+        searchMode = "size";
+        renderResult();
+        return;
+      }
+
+      currentResult = null;
+      selectedSize = "";
+      searchMode = "code";
+      renderResult();
     }
 
     async function loadSheet() {
-      if (sheetLoaded) return;
-
-      const status = document.getElementById("sheetStatus");
-      status.textContent = "Đang kết nối đến kho Minh Chiến...";
+      showLoading(true);
+      showError("");
 
       try {
-        const response = await fetch(SHEET_CSV_URL, { cache: "no-store" });
-        if (!response.ok) throw new Error("Load failed");
+        const response = await fetch(getGoogleSheetCsvUrl(GOOGLE_SHEET_URL), { cache: "no-store" });
+        if (!response.ok) throw new Error("Không đọc được dữ liệu từ Google Sheet");
 
         const text = await response.text();
-        productData = csvToData(text);
-        sheetLoaded = true;
+        const parsed = csvToRows(text);
+        const mapped = mapSheetRows(parsed);
+        const grouped = groupTiles(mapped);
 
-        if (Object.keys(productData).length > 0) {
-          status.textContent = "Đã tải dữ liệu từ kho Minh Chiến";
-        } else {
-          status.textContent = "Không thấy dữ liệu hợp lệ trong Google Sheet.";
-        }
-      } catch (error) {
-        status.textContent = "Không tải được Google Sheet. Kiểm tra lại quyền chia sẻ sheet.";
+        if (!grouped.length) throw new Error("Google Sheet chưa có dữ liệu hợp lệ");
+        tileData = grouped;
+        rawRows = mapped;
+        allStores = buildAllStores(mapped);
+        
+      } catch (e) {
+        tileData = [];
+        rawRows = [];
+        allStores = [];
+
+        showError((e && e.message) || "Lỗi tải dữ liệu");
+      } finally {
+        showLoading(false);
+        
+        renderResult();
       }
     }
 
-    async function searchCode() {
-      await loadSheet();
-
-      const code = document.getElementById("codeInput").value.trim().toUpperCase();
-      const result = document.getElementById("result1");
-
-      if (!code) {
-        result.innerHTML = "";
-        return;
-      }
-
-      const product = productData[code];
-
-      if (!product) {
-        result.innerHTML = "Không tìm thấy mã";
-        return;
-      }
-
-      document.getElementById("price2").value = product.priceNumber || "";
-      document.getElementById("boxQty").value = product.boxQty || "";
-
-      const size = extractSizeFromName(product.name);
-      if (size) {
-        document.getElementById("length2").value = size.length;
-        document.getElementById("width2").value = size.width;
-      }
-
-      const imageHtml = product.image
-        ? '<img class="product-image" src="' + product.image + '" alt="' + product.name + '" onerror="this.style.display=\'none\'">'
-        : "";
-
-      result.innerHTML =
-        imageHtml +
-        '<br>Mã: ' + product.code +
-        '<br>Tên: ' + product.name +
-        '<br>Giá: ' + product.priceText +
-        '<br>Tồn kho: ' + product.stock +
-        (product.boxQty ? '<br>Số viên/thùng: ' + product.boxQty : '');
-    }
-
-    function calculate2() {
-      const area = Number(document.getElementById("area2").value);
-      const length = Number(document.getElementById("length2").value);
-      const width = Number(document.getElementById("width2").value);
-      const waste = Number(document.getElementById("waste2").value) || 0;
-      const price = Number(document.getElementById("price2").value);
-      const boxQty = Number(document.getElementById("boxQty").value);
-
-      if (!area || !length || !width || !price) {
-        document.getElementById("result2").innerHTML = "Vui lòng nhập đủ diện tích, kích thước và giá.";
-        return;
-      }
-
-      const tileArea = (length / 100) * (width / 100);
-      if (!tileArea) {
-        document.getElementById("result2").innerHTML = "Kích thước gạch không hợp lệ.";
-        return;
-      }
-
-      const totalArea = area * (1 + waste / 100);
-      const tilesNeeded = Math.ceil(totalArea / tileArea);
-      const totalPrice = totalArea * price;
-
-      let html =
-        'Số viên: ' + tilesNeeded +
-        '<br>Diện tích: ' + totalArea.toFixed(2) + ' m²' +
-        '<br>Tiền: ' + totalPrice.toLocaleString("vi-VN") + ' VND';
-
-      if (boxQty && boxQty > 0) {
-        const boxes = Math.ceil(tilesNeeded / boxQty);
-        html += '<br>Số thùng: ' + boxes + ' thùng';
-      }
-
-      document.getElementById("result2").innerHTML = html;
-    }
-
-    document.getElementById("codeInput").addEventListener("input", function () {
-      searchCode();
+    searchBtn.addEventListener("click", handleSearch);
+    codeInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") handleSearch();
+    });
+    codeInput.addEventListener("input", (e) => {
+      e.target.value = e.target.value.toUpperCase();
+      searched = false;
+      currentResult = null;
+      selectedSize = "";
+      renderResult();
     });
 
+    
+    renderResult();
+    
     loadSheet();
   </script>
 </body>
